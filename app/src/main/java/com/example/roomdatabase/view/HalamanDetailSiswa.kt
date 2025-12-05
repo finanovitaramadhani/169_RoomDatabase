@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import com.example.roomdatabase.R
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -34,14 +35,13 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.roomdatabase.room.Siswa
 import com.example.roomdatabase.view.route.DestinasiDetailSiswa
 import com.example.roomdatabase.viewmodel.DetailSiswaUiState
 import com.example.roomdatabase.viewmodel.DetailViewModel
 import com.example.roomdatabase.viewmodel.provider.PenyediaViewModel
-import kotlinx.coroutines.launch
-import com.example.roomdatabase.R
-import com.example.roomdatabase.room.Siswa
 import com.example.roomdatabase.viewmodel.toSiswa
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,7 +83,7 @@ fun DetailSiswaScreen(
             onDelete = { coroutineScope.launch {
                 viewModel.deleteSiswa()
                 navigateBack()
-            }},
+            } },
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
@@ -107,6 +107,7 @@ private fun BodyDetailDataSiswa(
             siswa = detailSiswaUiState.detailSiswa.toSiswa(),
             modifier = Modifier.fillMaxWidth()
         )
+
         OutlinedButton(
             onClick = { deleteConfirmationRequired = true },
             shape = MaterialTheme.shapes.small,
@@ -174,7 +175,6 @@ fun DetailDataSiswa(
                 )
             )
         }
-
     }
 }
 
@@ -195,7 +195,8 @@ private fun DeleteConfirmationDialog(
     onDeleteCancel: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    AlertDialog(onDismissRequest = { /* Do nothing */ },
+    AlertDialog(
+        onDismissRequest = { /* Do nothing */ },
         title = { Text(stringResource(R.string.attention)) },
         text = { Text(stringResource(R.string.tanya)) },
         modifier = modifier,
@@ -208,5 +209,6 @@ private fun DeleteConfirmationDialog(
             TextButton(onClick = onDeleteConfirm) {
                 Text(stringResource(R.string.yes))
             }
-        })
+        }
+    )
 }
