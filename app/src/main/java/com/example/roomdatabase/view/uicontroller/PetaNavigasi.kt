@@ -62,7 +62,8 @@ fun HostNavigasi(
             })
         ) {
             DetailSiswaScreen(
-                //navigateToEditItem = {navController.navigate("&{DestinasiEditSiswa.route}/$it")},
+                navigateToEditItem = { id ->
+                    navController.navigate("${DestinasiEditSiswa.route}/$id")},
                 navigateBack = { navController.navigateUp() })
         }
         composable (route= DestinasiEditSiswa.routeWithArgs,

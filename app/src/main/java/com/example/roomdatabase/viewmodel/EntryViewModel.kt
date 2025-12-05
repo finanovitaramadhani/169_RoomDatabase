@@ -62,7 +62,7 @@ fun DetailSiswa.toSiswa(): Siswa = Siswa(
 
 )
 
-fun Siswa.toUIStateSiswwa(isEntryValid: Boolean = false): UIStateSiswa =
+fun Siswa.toUIStateSiswa(isEntryValid: Boolean = false): UIStateSiswa =
     UIStateSiswa(
         detailSiswa = this.toDetailSiswa(),
         isEntryValid = isEntryValid
