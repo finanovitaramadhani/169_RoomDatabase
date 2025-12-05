@@ -9,9 +9,9 @@ interface RepositoriSiswa {
     suspend fun insertSiswa(siswa: Siswa)
 
     //edit 1 : tambah 3 fungsi berikut
-    fun getSiswaStream(id: Int): Flow<Siswa>
+    fun getSiswaStream(id: Int): Flow<Siswa?>
     suspend fun deleteSiswa(siswa: Siswa)
-    suspend fun updateSiswa(siswa: Siswa)
+    //suspend fun updateSiswa(siswa: Siswa)
 }
 
 class OfflineRepositoriSiswa(
@@ -19,5 +19,9 @@ class OfflineRepositoriSiswa(
 ): RepositoriSiswa {
     override fun getAllSiswaStream(): Flow<List<Siswa>> = siswaDao.getAllSiswa()
     override suspend fun insertSiswa(siswa: Siswa) = siswaDao.insert(siswa)
+
+    override fun getSiswaStream(id: Int): Flow<Siswa?> = siswaDao.getSiswa(id)
+    override suspend fun deleteSiswa(siswa: Siswa) = siswaDao.insert(siswa)
+    //override suspend fun updateSiswa(siswa: Siswa) = siswaDao.insert(siswa)
     }
 
