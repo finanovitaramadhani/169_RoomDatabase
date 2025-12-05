@@ -1,5 +1,6 @@
 package com.example.roomdatabase.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,21 +28,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Update
 import com.example.roomdatabase.viewmodel.HomeViewModel
+import com.example.roomdatabase.viewmodel.provider.PenyediaViewModel
 import com.example.roomdatabase.view.route.DestinasiHome
 import com.example.roomdatabase.room.Siswa
 import com.example.roomdatabase.R
-import com.example.roomdatabase.viewmodel.provider.PenyediaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
+    //edit 5
+    navigateToItemUpdate: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
@@ -50,9 +53,10 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
+            // Memanggil SiswaTopAppBar dari File 1
             SiswaTopAppBar(
-                title = stringResource(DestinasiHome.titleRes),
-                canNavigateBack = false,
+                title = stringResource(id = DestinasiHome.titleRes),
+                canNavigateBack = false, // Halaman Home tidak butuh tombol back
                 scrollBehavior = scrollBehavior
             )
         },
@@ -60,19 +64,20 @@ fun HomeScreen(
             FloatingActionButton(
                 onClick = navigateToItemEntry,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large))
+                modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.entry_siswa)
+                    contentDescription = stringResource(id = R.string.entry_siswa)
                 )
             }
-        }
+        },
     ) { innerPadding ->
         val uiStateSiswa by viewModel.homeUiState.collectAsState()
-
         BodyHome(
             itemSiswa = uiStateSiswa.listSiswa,
+            //edit 6
+            onSiswaClick = navigateToItemUpdate,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -83,6 +88,8 @@ fun HomeScreen(
 @Composable
 fun BodyHome(
     itemSiswa: List<Siswa>,
+    //edit 3: Tambahkan parameter onSiswaClick
+    onSiswaClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -98,7 +105,9 @@ fun BodyHome(
         } else {
             ListSiswa(
                 itemSiswa = itemSiswa,
-                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
+                //edit 4
+                onSiswaClick = {onSiswaClick(it.id)},
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
         }
     }
@@ -107,14 +116,17 @@ fun BodyHome(
 @Composable
 fun ListSiswa(
     itemSiswa: List<Siswa>,
+    //edit 1: tambahkan parameter onSiswaClick
+    onSiswaClick: (Siswa) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
         items(items = itemSiswa, key = { it.id }) { person ->
             DataSiswa(
                 siswa = person,
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
+                modifier = Modifier.padding(8.dp)
+                    //edit 2: tambahkan modifikasi clickable
+                    .clickable { onSiswaClick(person)}
             )
         }
     }
@@ -130,20 +142,20 @@ fun DataSiswa(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_large)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = siswa.nama,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
                 )
                 Spacer(Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Default.Phone,
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Text(
                     text = siswa.telepon,
@@ -157,4 +169,3 @@ fun DataSiswa(
         }
     }
 }
-
